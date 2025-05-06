@@ -6,7 +6,7 @@ This project implements a CI/CD pipeline that builds a Docker image for the `dev
 
 ---
 
-## 📦 Pipeline Design
+## Pipeline Design
 
 The GitHub Actions pipeline is triggered on every push to the `main` branch. Here's what it does step-by-step:
 
@@ -22,7 +22,7 @@ The GitHub Actions pipeline is triggered on every push to the `main` branch. Her
 
 ---
 
-## 🔐 IAM Role Setup
+## IAM Role Setup
 
 To securely allow GitHub Actions to push Docker images to Amazon ECR, we created an IAM role with the following configuration:
 
@@ -77,7 +77,7 @@ The role also has permissions to push images to ECR:
 
 ---
 
-## 🐳 How Multi-Stage Build Works
+## How Multi-Stage Build Works
 
 The project uses a multi-stage Dockerfile to keep the final image small and clean:
 
