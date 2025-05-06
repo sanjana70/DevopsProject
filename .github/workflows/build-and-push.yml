@@ -1,4 +1,4 @@
-#This workflow will allow us to build and push
+#This workflow will allow us to build and push it
 name: Build and Push to ECR
 
 on:
