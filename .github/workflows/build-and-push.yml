@@ -1,1 +1,40 @@
 #This workflow will allow us to build and push
+name: Build and Push to ECR
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+
+    - name: Build with Maven
+      run: mvn clean package -DskipTests
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: arn:aws:iam::529710251887:role/GitHubOIDCRole
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      uses: aws-actions/amazon-ecr-login@v2
+
+    - name: Build, Tag, and Push Docker Image
+      run: |
+        IMAGE_URI=529710251887.dkr.ecr.us-east-1.amazonaws.com/devops-project
+        docker build -t $IMAGE_URI .
+        docker push $IMAGE_URI
