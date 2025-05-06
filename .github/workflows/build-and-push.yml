@@ -29,13 +29,13 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v2
       with:
         role-to-assume: arn:aws:iam::529710251887:role/GitHubOIDCRole
-        aws-region: us-east-1
+        aws-region: eu-north-1
 
     - name: Login to Amazon ECR
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build, Tag, and Push Docker Image
       run: |
-        IMAGE_URI=529710251887.dkr.ecr.us-east-1.amazonaws.com/devops-project
+        IMAGE_URI=529710251887.dkr.ecr.eu-north-1.amazonaws.com/devops-project
         docker build -t $IMAGE_URI .
         docker push $IMAGE_URI
