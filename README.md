@@ -14,7 +14,7 @@ This project implements a secure and automated CI/CD pipeline that:
 ## Repository Structure
 
 ```
-devops-project/
+DevopsProject/
 ├── .github/workflows/build-and-push.yml     # GitHub Actions workflow file
 ├── src/                                     # Java source code
 ├── Dockerfile                               # Multi-stage Dockerfile
