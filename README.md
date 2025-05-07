@@ -43,25 +43,6 @@ The IAM role was created in AWS with the following key configurations:
 - **Permissions Policy**:
   - A minimal custom policy was used to follow the principle of least privilege:
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "ecr:GetAuthorizationToken",
-        "ecr:BatchCheckLayerAvailability",
-        "ecr:PutImage",
-        "ecr:InitiateLayerUpload",
-        "ecr:UploadLayerPart",
-        "ecr:CompleteLayerUpload"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-```
 ![image](https://github.com/user-attachments/assets/35572499-1de4-4050-9dbc-eb52a0d81718)
 
 
