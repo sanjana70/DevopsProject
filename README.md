@@ -1,59 +1,47 @@
-# DevopsProject
-For Devops Learning Purposes
-# CI/CD Pipeline for glearning-order Microservice
 
-This project implements a CI/CD pipeline that builds a Docker image for the `devops-project` microservice using GitHub Actions and pushes it to Amazon ECR. The setup uses OpenID Connect (OIDC) to securely authenticate GitHub Actions with AWS.
+# DEVOPS PROJECT - Secure CI Pipeline for Java Application with Multi-stage Docker Build and AWS OIDC Integration
+Sanjana Suresh RA2412062015004
 
----
+## Objective
+
+This project implements a secure and automated CI/CD pipeline that:
+
+- Pulls a Java application's source code.
+- Builds a Docker image using a multi-stage Dockerfile.
+- Authenticates with AWS using GitHub OpenID Connect (OIDC) (without access keys).
+- Pushes the final Docker image to a private AWS Elastic Container Registry (ECR) repository.
+
+## Repository Structure
+
+```
+devops-project/
+├── .github/workflows/build-and-push.yml     # GitHub Actions workflow file
+├── src/                                     # Java source code
+├── Dockerfile                               # Multi-stage Dockerfile
+├── pom.xml                                  # Maven configuration
+├── README.md                                # Documentation
+└── Required Screenshots                     #Required Screenshots to show project completion
+```
 
 ## Pipeline Design
 
-The GitHub Actions pipeline is triggered on every push to the `main` branch. Here's what it does step-by-step:
+The GitHub Actions workflow (`.github/workflows/build-and-push.yml`) performs the following steps:
 
-1. **Checkout Code**: Uses `actions/checkout@v4` to clone the repository.
-2. **Set Up Java**: Configures Java 17 using `actions/setup-java`.
-3. **Build JAR with Maven**: Executes `mvn clean package -DskipTests` to compile the project.
-4. **Assume IAM Role**: Uses OIDC to securely authenticate with AWS and assume a predefined IAM role.
-5. **Login to ECR**: Authenticates Docker with Amazon ECR.
-6. **Build and Push Docker Image**:
-   - Builds the image using a multi-stage Dockerfile.
-   - Tags it using the ECR repository URI.
-   - Pushes the image to ECR.
-
----
+1. **Checkout**: Clones the `devops-project` repository.
+2. **OIDC Authentication**: Assumes an AWS IAM role using GitHub's OIDC token (via `aws-actions/configure-aws-credentials@v2`).
+3. **Docker Login**: Authenticates to Amazon ECR using the AWS CLI.
+4. **Build and Push**:
+   - Builds the Docker image using a multi-stage Dockerfile.
+   - Tags the image with the `latest` tag.
+   - Pushes the image to the AWS ECR private repository.
 
 ## IAM Role Setup
 
-To securely allow GitHub Actions to push Docker images to Amazon ECR, we created an IAM role with the following configuration:
+The IAM role was created in AWS with the following key configurations:
 
-### Trust Policy
-This policy allows GitHub Actions to assume the IAM role using OIDC:
-
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "arn:aws:iam::<account-id>:oidc-provider/token.actions.githubusercontent.com"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-        "StringEquals": {
-          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
-        },
-        "StringLike": {
-          "token.actions.githubusercontent.com:sub": "repo:sanjana70/*"
-        }
-      }
-    }
-  ]
-}
-```
-
-### Permissions Policy
-The role also has permissions to push images to ECR:
+- **OIDC Trust Policy**: Allows GitHub's identity provider (`token.actions.githubusercontent.com`) to assume the role.
+- **Permissions Policy**:
+  - A minimal custom policy was used to follow the principle of least privilege:
 
 ```json
 {
@@ -75,30 +63,45 @@ The role also has permissions to push images to ECR:
 }
 ```
 
----
+## Multi-Stage Build Explained
 
-## How Multi-Stage Build Works
+The `Dockerfile` follows a two-stage build:
 
-The project uses a multi-stage Dockerfile to keep the final image small and clean:
+1. **Build Stage**:
+   - Uses a Maven image to compile the Java source code into a `.jar` file.
+2. **Final Stage**:
+   - Uses a lightweight OpenJDK image to run the compiled `.jar`, keeping the final image minimal and secure.
 
-```dockerfile
-# Stage 1: Build
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
-WORKDIR /app
-COPY . .
-RUN mvn clean package -DskipTests
+This approach improves build efficiency and results in smaller production images.
 
-# Stage 2: Runtime
-FROM eclipse-temurin:17-jre
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
-```
+## Challenges Faced
 
-### Benefits:
-- Keeps the final image lightweight by excluding Maven and source files.
-- Improves security and performance.
-- Faster deployment time.
+- Setting up GitHub OIDC correctly with the IAM trust policy format and conditions.
+- Ensuring proper Maven build behavior within Docker, especially classpath and dependencies.
+- Accidentally forgot to include the java distribution name
+- Troubleshooting GitHub Actions errors when assuming the IAM role.
+- Accidentaly gave the wrong data center name, causing build to fail
+- Initially gave fullregistry access, then reduced the permissions through custom policy
 
----
+## Screenshots
+
+Please refer to the below screenshots:
+
+1. **GitHub Actions Successful Run**  
+   <img width="1349" alt="image" src="https://github.com/user-attachments/assets/6f88bd6d-5557-4cc4-b32b-999357f68386" />
+
+2. **Docker Image in AWS ECR**  
+   <img width="1349" alt="image" src="https://github.com/user-attachments/assets/cdfb3314-0ba7-4c3c-a371-1015a0faefc7" />
+
+3. **AWS IAM Role Trust Policy**  
+   ![image](https://github.com/user-attachments/assets/173c138a-d978-4ed5-9459-d01c43777753)
+
+
+## Final Notes
+
+This project adheres to DevOps best practices by:
+
+- Avoiding the use of static AWS credentials.
+- Using lightweight, production-ready Docker images.
+- Keeping the build and deployment process entirely automated and reproducible.
+- Using minimal permissions
