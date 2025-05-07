@@ -20,7 +20,7 @@ DevopsProject/
 ├── Dockerfile                               # Multi-stage Dockerfile
 ├── pom.xml                                  # Maven configuration
 ├── README.md                                # Documentation
-└── Required Screenshots                     #Required Screenshots to show project completion
+└── Required Screenshots                     # Required Screenshots to show project completion
 ```
 
 ## Pipeline Design
