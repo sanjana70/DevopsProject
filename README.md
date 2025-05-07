@@ -62,6 +62,8 @@ The IAM role was created in AWS with the following key configurations:
   ]
 }
 ```
+![image](https://github.com/user-attachments/assets/35572499-1de4-4050-9dbc-eb52a0d81718)
+
 
 ## Multi-Stage Build Explained
 
