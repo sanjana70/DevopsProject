@@ -97,10 +97,8 @@ Please refer to the below screenshots:
    ![image](https://github.com/user-attachments/assets/173c138a-d978-4ed5-9459-d01c43777753)
 
 
-## Final Notes
-
-This project adheres to DevOps best practices by:
-
+## Conclusion
+Thus we have completed the devops project, and also adhered to the best practices by:
 - Avoiding the use of static AWS credentials.
 - Using lightweight, production-ready Docker images.
 - Keeping the build and deployment process entirely automated and reproducible.
