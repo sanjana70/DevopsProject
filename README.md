@@ -79,6 +79,9 @@ Please refer to the below screenshots:
 3. **AWS IAM Role Trust Policy**  
    ![image](https://github.com/user-attachments/assets/173c138a-d978-4ed5-9459-d01c43777753)
 
+4. **Custom Permissions Policy to adhere to best Devops Practices**     
+   ![image](https://github.com/user-attachments/assets/bec87782-8296-4ed8-9046-3eada1519a54)
+
 
 ## Conclusion
 Thus we have completed the devops project, and also adhered to the best practices by:
